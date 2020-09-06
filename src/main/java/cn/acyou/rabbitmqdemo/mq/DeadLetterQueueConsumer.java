@@ -26,8 +26,8 @@ public class DeadLetterQueueConsumer {
             bindings =
             @QueueBinding(
                     value = @Queue(value = QUEUE_ORDER_EXPIRE_DELAY, durable = "true", autoDelete = "false"),
-                    exchange = @Exchange(value = EXCHANGE_ORDER_EXPIRE_DELAY, durable = "true", type = ExchangeTypes.DIRECT, delayed = "true", arguments = {
-                            @Argument(name = "x-delayed-type", value = "direct")
+                    exchange = @Exchange(value = EXCHANGE_ORDER_EXPIRE_DELAY, durable = "true", type = ExchangeTypes.FANOUT, delayed = "true", arguments = {
+                            @Argument(name = "x-delayed-type", value = "fanout")
                     }),
                     key = ROUTING_KEY_ORDER_EXPIRE_DELAY
             ),

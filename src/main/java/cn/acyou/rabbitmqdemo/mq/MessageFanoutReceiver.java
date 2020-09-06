@@ -21,20 +21,32 @@ import org.springframework.stereotype.Component;
  **/
 @Slf4j
 @Component
-public class MessageReceiver {
+public class MessageFanoutReceiver {
 
     @RabbitListener(
             bindings =
             @QueueBinding(
-                    value = @Queue(value = "user-direct-queue", durable = "true", autoDelete = "false"),
-                    exchange = @Exchange(value = "user-direct-exchange", durable = "true", type = ExchangeTypes.DIRECT),
-                    key = "user-direct-key"
+                    value = @Queue(value = "user-message-queue", durable = "true", autoDelete = "false"),
+                    exchange = @Exchange(value = "user-message-exchange", durable = "true", type = ExchangeTypes.FANOUT),
+                    key = "user-message.*"
             ),
             concurrency = "1",
             ackMode = "AUTO"
     )
     public void messageReceiver1(String message) {
-        log.info("RabbitMQ ————————————> MessageReceiver : " + message);
+        log.info("RabbitMQ ————————————> MessageFanoutReceiver[1] : " + message);
     }
-
+    @RabbitListener(
+            bindings =
+            @QueueBinding(
+                    value = @Queue(value = "member-message-queue", durable = "true", autoDelete = "false"),
+                    exchange = @Exchange(value = "user-message-exchange", durable = "true", type = ExchangeTypes.FANOUT),
+                    key = "user-message.*"
+            ),
+            concurrency = "1",
+            ackMode = "AUTO"
+    )
+    public void messageReceiver2(String message) {
+        log.info("RabbitMQ ————————————> MessageFanoutReceiver[2] : " + message);
+    }
 }
