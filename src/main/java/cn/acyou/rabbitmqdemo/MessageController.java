@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static cn.acyou.rabbitmqdemo.conf.RabbitMQConfig.EXCHANGE_ORDER_EXPIRE_DELAY;
+import static cn.acyou.rabbitmqdemo.conf.RabbitMQConfig.ROUTING_KEY_ORDER_EXPIRE_DELAY;
+
 /**
  * @author youfang
  * @version [1.0.0, 2020-9-5 下午 02:29]
@@ -28,11 +31,11 @@ public class MessageController {
         rabbitTemplate.convertAndSend(exchange, routingkey, message);
         return "success";
     }
-    @RequestMapping(value = "/test3", method = {RequestMethod.GET})
+    @RequestMapping(value = "/testDelayQueue", method = {RequestMethod.GET})
     @ResponseBody
-    public String test3(String msg, int delayTime) {
+    public String testDelayQueue(String msg, int delayTime) {
         Integer millisecond = delayTime * 1000;
-        rabbitTemplate.convertAndSend("delay.order.expire.exchange", "delay.order.expire.routingkey", msg, a -> {
+        rabbitTemplate.convertAndSend(EXCHANGE_ORDER_EXPIRE_DELAY, ROUTING_KEY_ORDER_EXPIRE_DELAY, msg, a -> {
             a.getMessageProperties().setDelay(millisecond);
             return a;
         });

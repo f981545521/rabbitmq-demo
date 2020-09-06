@@ -29,6 +29,7 @@ public class RabbitMQConfig {
         //# 注意：发布确认和事务。(两者不可同时使用)在channel为事务时，不可引入确认模式；同样channel为确认模式下，不可使用事务。
         //template.setChannelTransacted(true);
         template.setConfirmCallback(new RabbitTemplateConfirmCallback());
+        template.setMandatory(true);
         template.setReturnCallback(new RabbitTemplateReturnCallback());
         return template;
     }
